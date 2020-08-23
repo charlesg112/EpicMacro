@@ -90,6 +90,8 @@ namespace EpicMacro.Models
             #region Commands
 
         public ICommand RemoveCommand { get; private set; }
+        public ICommand MoveEventUpCommand { get; private set; }
+        public ICommand MoveEventDownCommand { get; private set; }
 
         #endregion
 
@@ -99,7 +101,12 @@ namespace EpicMacro.Models
         public UserEvent(UserEventType userEventType)
         {
             EventType = userEventType;
+            
+            // Commands
             RemoveCommand = new RemoveEventCommand(this);
+            MoveEventUpCommand = new MoveEventUpCommand(this);
+            MoveEventDownCommand = new MoveEventDownCommand(this);
+
             SelectableUserEvent = MainController.EventsViewModel.UserEventComboBoxItems[UserEventValueConverter.GetComboBoxID(userEventType)];
             StaticID++;
             ID = StaticID;
@@ -109,7 +116,12 @@ namespace EpicMacro.Models
         public UserEvent(UserEventType userEventType, int id)
         {
             EventType = userEventType;
+            
+            // Commands
             RemoveCommand = new RemoveEventCommand(this);
+            MoveEventUpCommand = new MoveEventUpCommand(this);
+            MoveEventDownCommand = new MoveEventDownCommand(this);
+
             SelectableUserEvent = new SelectableUserEvent(userEventType);
             ID = id;
             SetVisibilities();
@@ -300,6 +312,26 @@ namespace EpicMacro.Models
             }
 
             UserEvent.StaticID = MainController.EventsViewModel.UserEventList.Count;
+        }
+
+        public static void MoveUserEventUp(UserEvent userEvent)
+        {
+            if (userEvent.ID >= 2)
+            {
+                MainController.EventsViewModel.UserEventList.Move(userEvent.ID - 1, userEvent.ID - 2);
+            }
+
+            RefreshIndexes();
+        }
+
+        public static void MoveUserEventDown(UserEvent userEvent)
+        {
+            if (userEvent.ID < MainController.EventsViewModel.UserEventList.Count)
+            {
+                MainController.EventsViewModel.UserEventList.Move(userEvent.ID - 1, userEvent.ID);
+            }
+
+            RefreshIndexes();
         }
 
         #endregion

@@ -59,6 +59,8 @@
     <Compile Include="Commands\Event window commands\AddEventCommand.cs" />
     <Compile Include="Commands\Event window commands\ExecuteCommand.cs" />
     <Compile Include="Commands\Event window commands\GetCursorPosCommand.cs" />
+    <Compile Include="Commands\Event window commands\MoveEventDownCommand.cs" />
+    <Compile Include="Commands\Event window commands\MoveEventUpCommand.cs" />
     <Compile Include="Commands\Event window commands\RemoveEventCommand.cs" />
     <Compile Include="Exceptions\LoopIdentationException.cs" />
     <Compile Include="MainController.cs" />

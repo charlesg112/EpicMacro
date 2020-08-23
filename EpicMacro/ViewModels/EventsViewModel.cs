@@ -44,8 +44,8 @@ namespace EpicMacro.ViewModels
             #region Cursor Info
 
         private int _CursorInfoX, _CursorInfoY;
-        public int CursorInfoX { get { return _CursorInfoX; } set { _CursorInfoX = value; } }
-        public int CursorInfoY { get { return _CursorInfoY; } set { _CursorInfoY = value; } }
+        public int CursorInfoX { get { return _CursorInfoX; } set { _CursorInfoX = value; OnPropertyChanged("CursorInfoX"); } }
+        public int CursorInfoY { get { return _CursorInfoY; } set { _CursorInfoY = value; OnPropertyChanged("CursorInfoY"); } }
 
         #endregion
 
@@ -187,7 +187,9 @@ namespace EpicMacro.ViewModels
 
         internal void GetCursorPos()
         {
-            throw new NotImplementedException();
+            MouseOperations.MousePoint xy = MouseOperations.GetCursorPosition();
+            CursorInfoX = xy.X;
+            CursorInfoY = xy.Y;
         }
 
         #endregion
@@ -256,6 +258,12 @@ namespace EpicMacro.ViewModels
                     Debug.WriteLine("P Key pressed");
                     AbortExecution();
                     Thread.Sleep(100);
+                }
+
+                if (Keyboard.IsKeyDown(Key.O))
+                {
+                    GetCursorPos();
+                    Thread.Sleep(10);
                 }
 
                 Thread.Sleep(10);

@@ -8,7 +8,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="White">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="432"/>
+            <ColumnDefinition Width="472"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <!-- Left Column -->
@@ -23,9 +23,9 @@
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="20"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*" SharedSizeGroup="col2"/>
-                                <ColumnDefinition Width="*" SharedSizeGroup="col3"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto" SharedSizeGroup="col2"/>
+                                <ColumnDefinition Width="auto" SharedSizeGroup="col3"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Bottom">
                                 <TextBlock Text="{Binding ID}" Grid.Column="0"/>
@@ -36,12 +36,13 @@
                                       SelectedItem="{Binding SelectableUserEvent, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                       DisplayMemberPath="DisplayedName"
                                       SelectionChanged="ComboBox_SelectionChanged"
-                                      Width="120"
+                                      Width="100"
+                                      Margin="0 0 5 0"
                                       HorizontalAlignment="Left"/>
 
                             <!-- Different value fields -->
-                            <TextBox Grid.Column="2" Text="{Binding KeyPressValueField}" Visibility="{Binding KeyPressValueFieldVisibility}" Margin="17 0 202 0" Width="20" HorizontalAlignment="Left"/>
-                            <TextBox Grid.Column="2" Text="{Binding DelayValueField}" Visibility="{Binding DelayValueFieldVisibility}" Margin="17 0 202 0" Width="20" HorizontalAlignment="Left"/>
+                            <TextBox Grid.Column="2" Text="{Binding KeyPressValueField}" Visibility="{Binding KeyPressValueFieldVisibility}" Margin="17 0 171 0" Width="50" HorizontalAlignment="Left"/>
+                            <TextBox Grid.Column="2" Text="{Binding DelayValueField}" Visibility="{Binding DelayValueFieldVisibility}" Margin="17 0 171 0" Width="50" HorizontalAlignment="Left"/>
                             <StackPanel Grid.Column="2" Orientation="Horizontal" Visibility="{Binding ClickValueFieldVisibility}" Margin="5 0 0 0" HorizontalAlignment="Left">
                                 <TextBlock Text="X"/>
                                 <TextBox Text="{Binding ClickXValueField}" Margin="5 0 10 0" Width="100"/>
@@ -60,7 +61,12 @@
                                 <TextBlock Text="Iterations"/>
                                 <TextBox Text="{Binding IterationsValueField}" Width="30" Margin="5 0 0 0"/>
                             </StackPanel>
-                            <Button Grid.Column="3" Content=" x " Margin="5 0 0 0" HorizontalAlignment="Right" Command="{Binding RemoveCommand}"/>
+                            <!-- Buttons -->
+                            <StackPanel Orientation="Horizontal" Grid.Column="3" HorizontalAlignment="Left">
+                                <Button Content=" . " Margin="5 0 0 0" Command="{Binding MoveEventDownCommand}"/>
+                                <Button Content=" ^ " Margin="5 0 0 0" Command="{Binding MoveEventUpCommand}"/>
+                                <Button Content=" x " Margin="5 0 0 0" Command="{Binding RemoveCommand}"/>
+                            </StackPanel>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -95,7 +101,11 @@
             <StackPanel Grid.Row="1" Margin="0 10 0 0">
                 <TextBlock Text="Cursor Info" FontWeight="Bold"/>
                 <StackPanel Orientation="Horizontal">
-                    <Button Content="Get Cursor (X, Y)" Width="100" Margin="5"/>
+                    <Button Content="Get Cursor (X, Y)" Width="100" Margin="5" Command="{Binding GetCursorPosCommand}"/>
+                    <TextBlock Text="X" Margin="5 5 2 5" FontSize="14"/>
+                    <TextBox Text="{Binding CursorInfoX}" IsReadOnly="True" Margin="5" Width="60"/>
+                    <TextBlock Text="Y" Margin="5 5 2 5" FontSize="14"/>
+                    <TextBox Text="{Binding CursorInfoY}" IsReadOnly="True" Margin="5" Width="60"/>
                 </StackPanel>
             </StackPanel>
             <!-- Execution buttons -->
