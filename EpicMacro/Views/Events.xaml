@@ -1,0 +1,102 @@
+﻿<UserControl x:Class="EpicMacro.Views.Events"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:EpicMacro.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="432"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <!-- Left Column -->
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <ListBox Grid.Row="0" x:Name="UserEventListBox" SelectedItem="{Binding SelectedUserEvent, UpdateSourceTrigger=PropertyChanged}" Grid.IsSharedSizeScope="True" HorizontalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*" SharedSizeGroup="col2"/>
+                                <ColumnDefinition Width="*" SharedSizeGroup="col3"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Bottom">
+                                <TextBlock Text="{Binding ID}" Grid.Column="0"/>
+                                <TextBlock Text="."/>
+                            </StackPanel>
+                            <ComboBox Grid.Column="1"
+                                      ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.UserEventComboBoxItems}"
+                                      SelectedItem="{Binding SelectableUserEvent, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                      DisplayMemberPath="DisplayedName"
+                                      SelectionChanged="ComboBox_SelectionChanged"
+                                      Width="120"
+                                      HorizontalAlignment="Left"/>
+
+                            <!-- Different value fields -->
+                            <TextBox Grid.Column="2" Text="{Binding KeyPressValueField}" Visibility="{Binding KeyPressValueFieldVisibility}" Margin="17 0 202 0" Width="20" HorizontalAlignment="Left"/>
+                            <TextBox Grid.Column="2" Text="{Binding DelayValueField}" Visibility="{Binding DelayValueFieldVisibility}" Margin="17 0 202 0" Width="20" HorizontalAlignment="Left"/>
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" Visibility="{Binding ClickValueFieldVisibility}" Margin="5 0 0 0" HorizontalAlignment="Left">
+                                <TextBlock Text="X"/>
+                                <TextBox Text="{Binding ClickXValueField}" Margin="5 0 10 0" Width="100"/>
+                                <TextBlock Text="Y"/>
+                                <TextBox Text="{Binding ClickYValueField}" Margin="5 0 0 0" Width="100"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" Visibility="{Binding LongClickValueFieldVisibility}" Margin="5 0 0 0" HorizontalAlignment="Left">
+                                <TextBlock Text="X"/>
+                                <TextBox Text="{Binding LongClickXValueField}" Margin="5 0 10 0" Width="39"/>
+                                <TextBlock Text="Y"/>
+                                <TextBox Text="{Binding LongClickYValueField}" Margin="5 0 10 0" Width="39"/>
+                                <TextBlock Text="Duration (ms)"/>
+                                <TextBox Text="{Binding LongClickDurationValueField}" Margin="5 0 0 0" Width="35"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Visibility="{Binding IterationsValueFieldVisibility}" Margin="5 0 0 0" HorizontalAlignment="Left" Orientation="Horizontal">
+                                <TextBlock Text="Iterations"/>
+                                <TextBox Text="{Binding IterationsValueField}" Width="30" Margin="5 0 0 0"/>
+                            </StackPanel>
+                            <Button Grid.Column="3" Content=" x " Margin="5 0 0 0" HorizontalAlignment="Right" Command="{Binding RemoveCommand}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                <Button Content="Add"  Command="{Binding AddEventCommand}"/>
+            </StackPanel>
+        </Grid>
+        <!-- Right Column -->
+        <Grid Grid.Column="1" Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <!-- Options -->
+            <StackPanel Grid.Row="0">
+                <TextBlock Text="Execution Options" FontWeight="Bold"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Loop" VerticalAlignment="Center" Margin="5"/>
+                    <CheckBox IsChecked="{Binding LoopModeEnabled}" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Visibility="{Binding PopUpManager.LoopCountVisibility}">
+                    <TextBlock Text="Loop count" Margin="5"/>
+                    <TextBox Width="50" Margin="5" IsEnabled="{Binding PopUpManager.LoopCountEnabled}" Text="{Binding LoopCount, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="Infinite" Margin="20 5 5 5"/>
+                    <CheckBox IsChecked="{Binding InfinityModeEnabled}" Margin="5" VerticalAlignment="Bottom"/>
+                </StackPanel>
+            </StackPanel>
+            <!-- Execution buttons -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="3">
+                <Button Content="Abort" Width="120" Command ="{Binding AbortCommand}" Margin="5 5 5 0"/>
+                <Button Content="Execute" Width="120" Command="{Binding ExecuteCommand}" HorizontalAlignment="Right" Margin="5 5 5 0"/>
+            </StackPanel>
+        </Grid>
+        
+    </Grid>
+</UserControl>
