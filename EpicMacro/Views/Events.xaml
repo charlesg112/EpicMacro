@@ -77,9 +77,9 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <!-- Options -->
+            <!-- Looping Options -->
             <StackPanel Grid.Row="0">
-                <TextBlock Text="Execution Options" FontWeight="Bold"/>
+                <TextBlock Text="Looping Options" FontWeight="Bold"/>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Loop" VerticalAlignment="Center" Margin="5"/>
                     <CheckBox IsChecked="{Binding LoopModeEnabled}" VerticalAlignment="Center"/>
@@ -89,6 +89,13 @@
                     <TextBox Width="50" Margin="5" IsEnabled="{Binding PopUpManager.LoopCountEnabled}" Text="{Binding LoopCount, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock Text="Infinite" Margin="20 5 5 5"/>
                     <CheckBox IsChecked="{Binding InfinityModeEnabled}" Margin="5" VerticalAlignment="Bottom"/>
+                </StackPanel>
+            </StackPanel>
+            <!-- Cursor info -->
+            <StackPanel Grid.Row="1" Margin="0 10 0 0">
+                <TextBlock Text="Cursor Info" FontWeight="Bold"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Get Cursor (X, Y)" Width="100" Margin="5"/>
                 </StackPanel>
             </StackPanel>
             <!-- Execution buttons -->

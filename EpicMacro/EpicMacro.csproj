@@ -55,10 +55,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Commands\AbortCommand.cs" />
-    <Compile Include="Commands\AddEventCommand.cs" />
-    <Compile Include="Commands\ExecuteCommand.cs" />
-    <Compile Include="Commands\RemoveEventCommand.cs" />
+    <Compile Include="Commands\Event window commands\AbortCommand.cs" />
+    <Compile Include="Commands\Event window commands\AddEventCommand.cs" />
+    <Compile Include="Commands\Event window commands\ExecuteCommand.cs" />
+    <Compile Include="Commands\Event window commands\GetCursorPosCommand.cs" />
+    <Compile Include="Commands\Event window commands\RemoveEventCommand.cs" />
     <Compile Include="Exceptions\LoopIdentationException.cs" />
     <Compile Include="MainController.cs" />
     <Compile Include="Res\MouseOperations.cs" />

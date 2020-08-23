@@ -1,4 +1,5 @@
 ﻿using EpicMacro.Commands;
+using EpicMacro.Commands.Event_window_commands;
 using EpicMacro.Models;
 using EpicMacro.Res;
 using System;
@@ -6,12 +7,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Security.RightsManagement;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Xml;
 
 namespace EpicMacro.ViewModels
 {
@@ -19,13 +16,14 @@ namespace EpicMacro.ViewModels
     {
 
         #region Attributes
+
+            #region Unsorted Attributes
         private UserEvent _SelectedUserEvent;
         private bool _LoopModeEnabled, _InfinityModeEnabled;
         private int _LoopCount;
         public ObservableCollection<UserEvent> UserEventList = new ObservableCollection<UserEvent>();
         public ObservableCollection<SelectableUserEvent> UserEventComboBoxItems { get; set; }
         public UserEvent SelectedUserEvent { get { return _SelectedUserEvent; } set { _SelectedUserEvent = value; OnPropertyChanged("SelectedUserEvent"); } }
-
         public bool LoopModeEnabled { get { return _LoopModeEnabled; } set { _LoopModeEnabled = value; OnPropertyChanged("LoopModeEnabled"); PopUpManager.UpdateLoopCountVisibility(_LoopModeEnabled); } }
         public bool InfinityModeEnabled { get { return _InfinityModeEnabled; } set { _InfinityModeEnabled = value; OnPropertyChanged("InfinityModeEnabled"); PopUpManager.UpdateLoopCountEnabled(_InfinityModeEnabled); } }
         public int LoopCount { get { return _LoopCount; } set { _LoopCount = value; OnPropertyChanged("LoopCount"); } }
@@ -33,31 +31,58 @@ namespace EpicMacro.ViewModels
         public bool IsExecuting { get; private set; }
         public Thread CurrentExecutionThread { get; set; }
         public Thread ListenerThread { get; set; }
+        #endregion
+
+            #region Commands
         public ICommand ExecuteCommand { get; private set; }
         public ICommand AddEventCommand { get; private set; }
         public ICommand AbortCommand { get; private set; }
+        public ICommand GetCursorPosCommand { get; private set; }
 
         #endregion
 
+            #region Cursor Info
+
+        private int _CursorInfoX, _CursorInfoY;
+        public int CursorInfoX { get { return _CursorInfoX; } set { _CursorInfoX = value; } }
+        public int CursorInfoY { get { return _CursorInfoY; } set { _CursorInfoY = value; } }
+
+        #endregion
+
+        #endregion
+
+        #region Constructor
         public EventsViewModel()
         {
             UserEventComboBoxItems = new ObservableCollection<SelectableUserEvent>();
+            
+            // Calling the constructor of all commands
             ExecuteCommand = new ExecuteCommand(this);
             AddEventCommand = new AddEventCommand(this);
             AbortCommand = new AbortCommand(this);
+            GetCursorPosCommand = new GetCursorPosCommand(this);
+
+            // Other stuff
             PopUpManager = new PopUpManager(LoopModeEnabled);
+            IsExecuting = false;
+            AddComboBoxValues();
+
+            // ListenerThread creation and start
             ListenerThread = new Thread(new ThreadStart(Listen));
             ListenerThread.SetApartmentState(ApartmentState.STA);
             ListenerThread.Start();
-            IsExecuting = false;
-            AddComboBoxValues();
+
         }
 
+        #endregion
+
+        #region Command Implementation
+
+            #region Execution Methods
         internal void Execute()
         {
             CurrentExecutionThread = new Thread(new ThreadStart(ExecuteImpl));
             CurrentExecutionThread.Start();
-            //Task.Run(() => ExecuteImpl());
         }
 
         internal void AbortExecution()
@@ -67,6 +92,13 @@ namespace EpicMacro.ViewModels
                 CurrentExecutionThread.Abort();
                 IsExecuting = false;
             }
+        }
+
+        internal bool ValidateExecution()
+        {
+            bool output = true;
+            if (LoopModeEnabled && !InfinityModeEnabled && LoopCount <= 0) output = false;
+            return output;
         }
 
         internal void ExecuteImpl()
@@ -137,11 +169,11 @@ namespace EpicMacro.ViewModels
                     Debug.WriteLine("An error occured");
                     //CurrentExecutionThread.Abort();
                 }
-                
+
 
             }
 
-            else 
+            else
             {
                 Debug.WriteLine("Execution could not be performed. Check the Execution Options");
             }
@@ -149,17 +181,32 @@ namespace EpicMacro.ViewModels
             IsExecuting = false;
         }
 
+        #endregion
+
+            #region Information Methods
+
+        internal void GetCursorPos()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+            #region UserEventList Methods
         internal void AddUserEvent()
         {
             UserEventList.Add(new UserEvent(UserEventType.Click));
         }
 
-        internal bool ValidateExecution()
+        public void RemoveUserEvent(UserEvent userEvent)
         {
-            bool output = true;
-            if (LoopModeEnabled && !InfinityModeEnabled && LoopCount <= 0) output = false;
-            return output;
+            UserEventList.Remove(userEvent);
+            UserEvent.RefreshIndexes();
         }
+
+        #endregion
+
+        #endregion
 
         #region INotifyPropertyChanged Implementation
 
@@ -172,6 +219,9 @@ namespace EpicMacro.ViewModels
 
         #endregion
 
+        #region Public and Thread Methods
+
+            #region UserEvent Combobox generation
         public ObservableCollection<SelectableUserEvent> GetComboBoxValues()
         {
 
@@ -194,6 +244,9 @@ namespace EpicMacro.ViewModels
             }
         }
 
+        #endregion
+
+            #region Thread Methods
         public void Listen()
         {
             while (true)
@@ -209,22 +262,9 @@ namespace EpicMacro.ViewModels
             }
         }
 
+        #endregion
 
-        public void RemoveUserEvent(UserEvent userEvent)
-        {
-            UserEventList.Remove(userEvent);
-            RefreshIndexes();
-        }
-
-        public void RefreshIndexes()
-        {
-            for (int i = 0; i < UserEventList.Count; i++)
-            {
-                UserEventList[i].ID = i + 1;
-            }
-
-            UserEvent.StaticID = UserEventList.Count;
-        }
+        #endregion
 
     }
 }

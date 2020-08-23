@@ -4,11 +4,8 @@ using EpicMacro.Res;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace EpicMacro.Models
@@ -26,30 +23,30 @@ namespace EpicMacro.Models
 
     public class UserEvent : INotifyPropertyChanged
     {
-        public static int StaticID;
-        private int _ID;
-        public int ID { get { return _ID; } set { _ID = value; OnPropertyChanged("ID"); } }
-        private UserEventType _EventType;
-        private SelectableUserEvent _SelectableUserEvent;
-        private string _ClickValueFieldVisibility, _KeyPressValueFieldVisibility, _DelayValueFieldVisibility, _LongClickValueFieldVisibility, _IterationsValueFieldVisibility;
+
+        #region Attributes
+
+            #region Looping Attributes
+
+        private int _IdentationLevel;
+        private List<UserEvent> _LoopContents = new List<UserEvent>();
+        private int _LoopEndIndex;
+        public int IdentationLevel { get { return _IdentationLevel; } set { _IdentationLevel = value; OnPropertyChanged("IdentationLevel"); } }
+        public List<UserEvent> LoopContents { get { return _LoopContents; } set { _LoopContents = value; OnPropertyChanged("LoopContents"); } }
+        public int LoopEndIndex { get { return _LoopEndIndex; } set { _LoopEndIndex = value; OnPropertyChanged("LoopEndIndex"); } }
+
+        #endregion
+
+            #region Value Fields
+
+        // Private
         private string _KeyPressValueField;
         private float _DelayValueField;
         private int _LongClickDurationValueField;
         private int _ClickXValueField, _ClickYValueField, _LongClickXValueField, _LongClickYValueField;
         private int _IterationsValueField;
 
-        // Looping data
-        private int _IdentationLevel;
-        private List<UserEvent> _LoopContents = new List<UserEvent>();
-        private int _LoopEndIndex;
-
-        // Public attributes
-        public UserEventType EventType { get { return _EventType; } set { _EventType = value; OnPropertyChanged("EventType"); } }
-        public string ClickValueFieldVisibility { get { return _ClickValueFieldVisibility; } set { _ClickValueFieldVisibility = value; OnPropertyChanged("ClickValueFieldVisibility"); } }
-        public string KeyPressValueFieldVisibility { get { return _KeyPressValueFieldVisibility; } set { _KeyPressValueFieldVisibility = value; OnPropertyChanged("KeyPressValueFieldVisibility"); } }
-        public string DelayValueFieldVisibility { get { return _DelayValueFieldVisibility; } set { _DelayValueFieldVisibility = value; OnPropertyChanged("DelayValueFieldVisibility"); } }
-        public string LongClickValueFieldVisibility { get { return _LongClickValueFieldVisibility; } set { _LongClickValueFieldVisibility = value; OnPropertyChanged("LongClickValueFieldVisibility"); } }
-        public string IterationsValueFieldVisibility { get { return _IterationsValueFieldVisibility; } set { _IterationsValueFieldVisibility = value; OnPropertyChanged("IterationsValueFieldVisibility"); } }
+        // Public
         public string KeyPressValueField { get { return _KeyPressValueField; } set { _KeyPressValueField = value; OnPropertyChanged("KeyPressValueField"); } }
         public float DelayValueField { get { return _DelayValueField; } set { _DelayValueField = value; OnPropertyChanged("DelayValueField"); } }
         public int LongClickDurationValueField { get { return _LongClickDurationValueField; } set { _LongClickDurationValueField = value; OnPropertyChanged("LongClickDurationValueField"); } }
@@ -58,11 +55,47 @@ namespace EpicMacro.Models
         public int LongClickXValueField { get { return _LongClickXValueField; } set { _LongClickXValueField = value; OnPropertyChanged("LongClickXValueField"); } }
         public int LongClickYValueField { get { return _LongClickYValueField; } set { _LongClickYValueField = value; OnPropertyChanged("LongClickYValueField"); } }
         public int IterationsValueField { get { return _IterationsValueField; } set { _IterationsValueField = value; OnPropertyChanged("IterationsValueField"); } }
-        public int IdentationLevel { get { return _IdentationLevel; } set { _IdentationLevel = value; OnPropertyChanged("IdentationLevel"); } }
-        public List<UserEvent> LoopContents { get { return _LoopContents; } set { _LoopContents = value; OnPropertyChanged("LoopContents"); } }
-        public int LoopEndIndex { get { return _LoopEndIndex; } set { _LoopEndIndex = value; OnPropertyChanged("LoopEndIndex"); } }
+
+        #endregion
+
+            #region Fields visibility
+
+        // Private
+        private string _ClickValueFieldVisibility, _KeyPressValueFieldVisibility, _DelayValueFieldVisibility, _LongClickValueFieldVisibility, _IterationsValueFieldVisibility;
+
+        // Public
+        public string ClickValueFieldVisibility { get { return _ClickValueFieldVisibility; } set { _ClickValueFieldVisibility = value; OnPropertyChanged("ClickValueFieldVisibility"); } }
+        public string KeyPressValueFieldVisibility { get { return _KeyPressValueFieldVisibility; } set { _KeyPressValueFieldVisibility = value; OnPropertyChanged("KeyPressValueFieldVisibility"); } }
+        public string DelayValueFieldVisibility { get { return _DelayValueFieldVisibility; } set { _DelayValueFieldVisibility = value; OnPropertyChanged("DelayValueFieldVisibility"); } }
+        public string LongClickValueFieldVisibility { get { return _LongClickValueFieldVisibility; } set { _LongClickValueFieldVisibility = value; OnPropertyChanged("LongClickValueFieldVisibility"); } }
+        public string IterationsValueFieldVisibility { get { return _IterationsValueFieldVisibility; } set { _IterationsValueFieldVisibility = value; OnPropertyChanged("IterationsValueFieldVisibility"); } }
+
+        #endregion
+
+            #region Unsorted Attributes
+        public static int StaticID;
+
+        // Private
+        private int _ID;
+        private UserEventType _EventType;
+        private SelectableUserEvent _SelectableUserEvent;
+
+        // Public
+        public UserEventType EventType { get { return _EventType; } set { _EventType = value; OnPropertyChanged("EventType"); } }
         public SelectableUserEvent SelectableUserEvent { get { return _SelectableUserEvent; } set { _SelectableUserEvent = value; OnPropertyChanged("SelectableUserEvent"); } }
+        public int ID { get { return _ID; } set { _ID = value; OnPropertyChanged("ID"); } }
+
+        #endregion
+
+            #region Commands
+
         public ICommand RemoveCommand { get; private set; }
+
+        #endregion
+
+        #endregion
+
+        #region Constructors
         public UserEvent(UserEventType userEventType)
         {
             EventType = userEventType;
@@ -81,6 +114,10 @@ namespace EpicMacro.Models
             ID = id;
             SetVisibilities();
         }
+
+        #endregion
+
+        #region Private and Public Instance Methods
 
         public void SetVisibilities()
         {
@@ -112,6 +149,8 @@ namespace EpicMacro.Models
             EventType = SelectableUserEvent.UserEventType;
             SetVisibilities();
         }
+
+        #endregion
 
         #region Perform
 
@@ -182,6 +221,8 @@ namespace EpicMacro.Models
 
         #endregion
 
+        #region Static Methods
+
         /// <summary>
         /// Calculates the indentation level of each items in the UserEventList
         /// </summary>
@@ -204,6 +245,10 @@ namespace EpicMacro.Models
             }
         }
 
+        /// <summary>
+        /// Parses the contents of each loop based on the identation level.
+        /// Adds the contents of each loop to the LoopContents attribute.
+        /// </summary>
         public static void ParseLoopContents()
         {
             CalculateIndentation();
@@ -243,6 +288,21 @@ namespace EpicMacro.Models
                 }
             }
         }
+
+        /// <summary>
+        /// Refreshes the indexes of all UserEvents listed
+        /// </summary>
+        public static void RefreshIndexes()
+        {
+            for (int i = 0; i < MainController.EventsViewModel.UserEventList.Count; i++)
+            {
+                MainController.EventsViewModel.UserEventList[i].ID = i + 1;
+            }
+
+            UserEvent.StaticID = MainController.EventsViewModel.UserEventList.Count;
+        }
+
+        #endregion
 
     }
 }
