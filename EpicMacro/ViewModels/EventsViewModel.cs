@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Windows;
 using System.Windows.Input;
 
 namespace EpicMacro.ViewModels
@@ -264,6 +265,24 @@ namespace EpicMacro.ViewModels
                 {
                     GetCursorPos();
                     Thread.Sleep(10);
+                }
+
+                if (Keyboard.IsKeyDown(Key.Left))
+                {
+                    Application.Current.Dispatcher.Invoke(() => UserEvent.MoveSelectedUserEventUp());
+                    Thread.Sleep(100);
+                }
+
+                if (Keyboard.IsKeyDown(Key.Right))
+                {
+                    Application.Current.Dispatcher.Invoke(() => UserEvent.MoveSelectedUserEventDown());
+                    Thread.Sleep(100);
+                }
+
+                if (Keyboard.IsKeyDown(Key.Delete))
+                {
+                    Application.Current.Dispatcher.Invoke(() => UserEvent.DeleteSelectedUserEventDown());
+                    Thread.Sleep(100);
                 }
 
                 Thread.Sleep(10);

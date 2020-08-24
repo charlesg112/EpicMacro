@@ -1,6 +1,7 @@
 ﻿using EpicMacro.Commands;
 using EpicMacro.Exceptions;
 using EpicMacro.Res;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -217,7 +218,6 @@ namespace EpicMacro.Models
             }
         }
 
-
         #endregion
 
         #endregion
@@ -319,6 +319,7 @@ namespace EpicMacro.Models
             if (userEvent.ID >= 2)
             {
                 MainController.EventsViewModel.UserEventList.Move(userEvent.ID - 1, userEvent.ID - 2);
+                Debug.WriteLine($"Tried to move up user event with ID {userEvent.ID}");
             }
 
             RefreshIndexes();
@@ -329,9 +330,36 @@ namespace EpicMacro.Models
             if (userEvent.ID < MainController.EventsViewModel.UserEventList.Count)
             {
                 MainController.EventsViewModel.UserEventList.Move(userEvent.ID - 1, userEvent.ID);
+                Debug.WriteLine($"Tried to down up user event with ID {userEvent.ID}");
             }
 
             RefreshIndexes();
+        }
+
+        public static void MoveSelectedUserEventUp()
+        {
+            if (MainController.EventsViewModel.SelectedUserEvent != null)
+            {
+                MoveUserEventUp(MainController.EventsViewModel.SelectedUserEvent);
+                Debug.WriteLine($"Tried to move up the selected user event with ID {MainController.EventsViewModel.SelectedUserEvent.ID}");
+            }            
+        }
+
+        public static void MoveSelectedUserEventDown()
+        {
+            if (MainController.EventsViewModel.SelectedUserEvent != null)
+            {
+                MoveUserEventDown(MainController.EventsViewModel.SelectedUserEvent);
+                Debug.WriteLine($"Tried to move down the selected user event with ID {MainController.EventsViewModel.SelectedUserEvent.ID}");
+            }
+        }
+
+        internal static void DeleteSelectedUserEventDown()
+        {
+            if (MainController.EventsViewModel.SelectedUserEvent != null)
+            {
+                MainController.EventsViewModel.UserEventList.Remove(MainController.EventsViewModel.SelectedUserEvent);
+            }
         }
 
         #endregion
