@@ -64,9 +64,10 @@
     <Compile Include="Commands\Event window commands\RemoveEventCommand.cs" />
     <Compile Include="Exceptions\LoopIdentationException.cs" />
     <Compile Include="MainController.cs" />
-    <Compile Include="Res\MouseOperations.cs" />
+    <Compile Include="Res\Input.cs" />
     <Compile Include="Res\PopUpManager.cs" />
     <Compile Include="Res\SelectableUserEvent.cs" />
+    <Compile Include="Res\UserControl.cs" />
     <Compile Include="ViewModels\EventsViewModel.cs" />
     <Compile Include="Views\Events.xaml.cs">
       <DependentUpon>Events.xaml</DependentUpon>

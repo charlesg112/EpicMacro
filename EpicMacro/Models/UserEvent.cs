@@ -189,7 +189,7 @@ namespace EpicMacro.Models
 
         public void ClickEvent()
         {
-            MouseOperations.MouseLeftClick(ClickXValueField, ClickYValueField);
+            UserControl.Mouse_LeftClick(ClickXValueField, ClickYValueField);
         }
 
         public void DelayEvent()
@@ -199,12 +199,12 @@ namespace EpicMacro.Models
 
         public void KeyPressEvent()
         {
-
+            UserControl.Keyboard_PressKey(VIRTUALKEY.VK_A);
         }
 
         public void LongClickEvent()
         {
-            MouseOperations.MouseLeftClickLong(LongClickXValueField, LongClickYValueField, LongClickDurationValueField);
+            UserControl.Mouse_LongLeftClick(LongClickXValueField, LongClickYValueField, LongClickDurationValueField);
         }
 
         public void LoopEvent() 

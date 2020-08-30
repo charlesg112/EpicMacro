@@ -188,7 +188,7 @@ namespace EpicMacro.ViewModels
 
         internal void GetCursorPos()
         {
-            MouseOperations.MousePoint xy = MouseOperations.GetCursorPosition();
+            UserControl.ScreenPos xy = UserControl.Mouse_GetCursorPos();
             CursorInfoX = xy.X;
             CursorInfoY = xy.Y;
         }
